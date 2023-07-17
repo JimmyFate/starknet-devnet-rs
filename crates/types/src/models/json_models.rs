@@ -1,12 +1,12 @@
 use serde::{Deserialize, Serialize};
 use starknet_types::starknet_api::block::BlockNumber;
 
-use crate::api::models::block::{BlockHashHex, SyncStatus};
-use crate::api::models::transaction::{
+use starknet_types::models::block::{BlockHashHex, SyncStatus};
+use starknet_types::models::transaction::{
     BroadcastedDeclareTransaction, BroadcastedTransactionWithType, ClassHashHex, EventFilter,
     FunctionCall, TransactionHashHex,
 };
-use crate::api::models::{BlockId, ContractAddressHex, PatriciaKeyHex};
+use starknet_types::models::{BlockId, ContractAddressHex, PatriciaKeyHex};
 
 #[derive(Serialize, Deserialize, Clone, Debug, Eq, PartialEq)]
 pub struct BlockIdInput {
@@ -98,10 +98,10 @@ mod tests {
     use starknet_types::starknet_api::block::BlockNumber;
 
     use super::{BlockIdInput, EstimateFeeInput, GetStorageInput};
-    use crate::api::models::transaction::{
+    use starknet_types::models::transaction::{
         BroadcastedDeclareTransaction, BroadcastedInvokeTransaction, BroadcastedTransaction,
     };
-    use crate::api::models::{
+    use starknet_types::models::{
         BlockHashOrNumber, BlockId, ContractAddressHex, FeltHex, PatriciaKeyHex, Tag,
     };
 
