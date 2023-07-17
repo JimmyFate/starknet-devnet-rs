@@ -50,7 +50,7 @@ pub mod base_64_gzipped_json_string {
     mod tests {
         use serde::Deserialize;
 
-        use crate::api::serde_helpers::base_64_gzipped_json_string::deserialize_to_serde_json_value_with_keys_ordered_in_alphabetical_order;
+        use starknet_types::models::serde_helpers::base_64_gzipped_json_string::deserialize_to_serde_json_value_with_keys_ordered_in_alphabetical_order;
 
         #[test]
         fn deserialize_successfully_starknet_api_program() {
@@ -75,11 +75,11 @@ pub mod base_64_gzipped_json_string {
 }
 
 pub mod hex_string {
+    use crate::contract_address::ContractAddress;
+    use crate::felt::Felt;
+    use crate::patricia_key::PatriciaKey;
+    use crate::traits::ToHexString;
     use serde::{Deserialize, Deserializer, Serializer};
-    use starknet_types::contract_address::ContractAddress;
-    use starknet_types::felt::Felt;
-    use starknet_types::patricia_key::PatriciaKey;
-    use starknet_types::traits::ToHexString;
 
     pub fn deserialize_to_prefixed_patricia_key<'de, D>(
         deserializer: D,
@@ -153,14 +153,14 @@ pub mod hex_string {
 
     #[cfg(test)]
     mod tests {
+        use crate::contract_address::ContractAddress;
+        use crate::felt::Felt;
+        use crate::patricia_key::PatriciaKey;
         use serde::{Deserialize, Serialize};
         use serde_json::json;
-        use starknet_types::contract_address::ContractAddress;
-        use starknet_types::felt::Felt;
-        use starknet_types::patricia_key::PatriciaKey;
-        use starknet_types::starknet_api::serde_utils::bytes_from_hex_str;
+        use starknet_api::serde_utils::bytes_from_hex_str;
 
-        use crate::api::serde_helpers::hex_string::{
+        use starknet_types::models::serde_helpers::hex_string::{
             deserialize_non_prefixed_hex_string_to_felt, deserialize_prefixed_hex_string_to_felt,
             deserialize_to_prefixed_contract_address, deserialize_to_prefixed_patricia_key,
             serialize_contract_address_to_prefixed_hex, serialize_to_prefixed_hex,

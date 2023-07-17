@@ -1,8 +1,8 @@
 use axum::Json;
 
 use super::error::HttpApiError;
-use super::models::ForkStatus;
 use super::HttpApiResult;
+use starknet_types::models::http_models::ForkStatus;
 
 /// Dumping and loading
 pub(crate) mod dump_load;

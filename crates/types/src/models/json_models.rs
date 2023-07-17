@@ -1,46 +1,46 @@
 use serde::{Deserialize, Serialize};
-use starknet_types::starknet_api::block::BlockNumber;
+use starknet_api::block::BlockNumber;
 
-use starknet_types::models::block::{BlockHashHex, SyncStatus};
-use starknet_types::models::transaction::{
+use crate::models::block::{BlockHashHex, SyncStatus};
+use crate::models::transaction::{
     BroadcastedDeclareTransaction, BroadcastedTransactionWithType, ClassHashHex, EventFilter,
     FunctionCall, TransactionHashHex,
 };
-use starknet_types::models::{BlockId, ContractAddressHex, PatriciaKeyHex};
+use crate::models::{BlockId, ContractAddressHex, PatriciaKeyHex};
 
 #[derive(Serialize, Deserialize, Clone, Debug, Eq, PartialEq)]
 pub struct BlockIdInput {
-    pub(crate) block_id: BlockId,
+    pub block_id: BlockId,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, Eq, PartialEq)]
 pub struct TransactionHashInput {
-    pub(crate) transaction_hash: TransactionHashHex,
+    pub transaction_hash: TransactionHashHex,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, Eq, PartialEq)]
 pub struct GetStorageInput {
-    pub(crate) block_id: BlockId,
-    pub(crate) contract_address: ContractAddressHex,
-    pub(crate) key: PatriciaKeyHex,
+    pub block_id: BlockId,
+    pub contract_address: ContractAddressHex,
+    pub key: PatriciaKeyHex,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, Eq, PartialEq)]
 pub struct BlockAndIndexInput {
-    pub(crate) block_id: BlockId,
-    pub(crate) index: BlockNumber,
+    pub block_id: BlockId,
+    pub index: BlockNumber,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, Eq, PartialEq)]
 pub struct BlockAndClassHashInput {
-    pub(crate) block_id: BlockId,
-    pub(crate) class_hash: ClassHashHex,
+    pub block_id: BlockId,
+    pub class_hash: ClassHashHex,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, Eq, PartialEq)]
 pub struct BlockAndContractAddressInput {
-    pub(crate) block_id: BlockId,
-    pub(crate) contract_address: ContractAddressHex,
+    pub block_id: BlockId,
+    pub contract_address: ContractAddressHex,
 }
 
 #[derive(Debug, Clone, Eq, PartialEq, Deserialize, Serialize)]
@@ -92,16 +92,17 @@ pub struct DeclareTransactionOutput {
 
 #[cfg(test)]
 mod tests {
-    use starknet_types::contract_address::ContractAddress;
-    use starknet_types::felt::Felt;
-    use starknet_types::patricia_key::PatriciaKey;
-    use starknet_types::starknet_api::block::BlockNumber;
+    use crate::contract_address::ContractAddress;
+    use crate::felt::Felt;
+    use crate::patricia_key::PatriciaKey;
+    use starknet_api::block::BlockNumber;
 
     use super::{BlockIdInput, EstimateFeeInput, GetStorageInput};
-    use starknet_types::models::transaction::{
+    use crate::models::transaction::{
         BroadcastedDeclareTransaction, BroadcastedInvokeTransaction, BroadcastedTransaction,
+        FunctionCall,
     };
-    use starknet_types::models::{
+    use crate::models::{
         BlockHashOrNumber, BlockId, ContractAddressHex, FeltHex, PatriciaKeyHex, Tag,
     };
 
@@ -289,7 +290,7 @@ mod tests {
         assert_eq!(
             call_input,
             super::CallInput {
-                request: super::FunctionCall {
+                request: FunctionCall {
                     contract_address: ContractAddressHex(
                         ContractAddress::new(Felt::from_prefixed_hex_str("0x01").unwrap()).unwrap()
                     ),

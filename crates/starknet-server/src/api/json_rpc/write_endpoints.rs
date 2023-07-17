@@ -5,14 +5,14 @@ use starknet_types::contract_class::ContractClass;
 use starknet_types::felt::Felt;
 
 use super::error::ApiError;
-use super::models::DeclareTransactionOutput;
 use super::RpcResult;
 use crate::api::json_rpc::JsonRpcHandler;
-use crate::api::models::contract_class::DeprecatedContractClass;
-use crate::api::models::transaction::{
+use starknet_types::models::contract_class::DeprecatedContractClass;
+use starknet_types::models::json_models::DeclareTransactionOutput;
+use starknet_types::models::transaction::{
     BroadcastedDeclareTransaction, BroadcastedDeclareTransactionV1,
 };
-use crate::api::models::FeltHex;
+use starknet_types::models::FeltHex;
 
 impl JsonRpcHandler {
     pub(crate) async fn add_declare_transaction(
@@ -33,29 +33,6 @@ impl JsonRpcHandler {
             transaction_hash: FeltHex(transaction_hash),
             class_hash: FeltHex(class_hash),
         })
-    }
-}
-
-impl TryFrom<DeprecatedContractClass> for ContractClass {
-    type Error = ApiError;
-
-    fn try_from(value: DeprecatedContractClass) -> RpcResult<Self> {
-        let abi_json = serde_json::to_value(value.abi).map_err(|_| {
-            ApiError::RpcError(RpcError::invalid_params("abi: Unable to parse to JSON"))
-        })?;
-        let entry_points_json = serde_json::to_value(value.entry_points_by_type).map_err(|_| {
-            ApiError::RpcError(RpcError::invalid_params(
-                "entry_points_by_type: Unable to parse to JSON",
-            ))
-        })?;
-
-        Ok(ContractClass::Cairo0(starknet_types::contract_class::Cairo0ContractClass::Json(
-            json!({
-                "program": value.program,
-                "abi": abi_json,
-                "entry_points_by_type": entry_points_json,
-            }),
-        )))
     }
 }
 
@@ -84,8 +61,8 @@ mod tests {
     use starknet_types::traits::ToHexString;
 
     use crate::api::json_rpc::JsonRpcHandler;
-    use crate::api::models::transaction::BroadcastedDeclareTransactionV1;
     use crate::api::Api;
+    use starknet_types::models::transaction::BroadcastedDeclareTransactionV1;
 
     #[tokio::test]
     async fn add_declare_transaction_v1_should_be_successful() {
@@ -93,7 +70,7 @@ mod tests {
         let json_rpc_handler = setup();
         let result = json_rpc_handler
             .add_declare_transaction(
-                crate::api::models::transaction::BroadcastedDeclareTransaction::V1(Box::new(
+                starknet_types::models::transaction::BroadcastedDeclareTransaction::V1(Box::new(
                     declare_txn_v1.clone(),
                 )),
             )

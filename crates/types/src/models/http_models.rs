@@ -1,26 +1,24 @@
 use serde::{Deserialize, Serialize};
-use starknet_types::starknet_api::transaction::Fee;
+use starknet_api::transaction::Fee;
 
-use starknet_types::models::block::BlockHashHex;
-use starknet_types::models::transaction::{
-    Calldata, EntryPointSelectorHex, Nonce, TransactionHashHex,
-};
-use starknet_types::models::{ContractAddressHex, FeltHex};
+use crate::models::block::BlockHashHex;
+use crate::models::transaction::{Calldata, EntryPointSelectorHex, Nonce, TransactionHashHex};
+use crate::models::{ContractAddressHex, FeltHex};
 
 #[derive(Deserialize, Debug)]
-pub(crate) struct Path {
+pub struct Path {
     path: String,
 }
 
 #[derive(Deserialize, Debug)]
-pub(crate) struct PostmanLoadL1MessagingContract {
+pub struct PostmanLoadL1MessagingContract {
     #[serde(rename = "networkUrl")]
     network_url: String,
     address: ContractAddressHex,
 }
 
 #[derive(Deserialize)]
-pub(crate) struct MessageToL2 {
+pub struct MessageToL2 {
     l2_contract_address: ContractAddressHex,
     entry_point_selector: EntryPointSelectorHex,
     l1_contract_addresss: ContractAddressHex,
@@ -30,79 +28,79 @@ pub(crate) struct MessageToL2 {
 }
 
 #[derive(Deserialize)]
-pub(crate) struct MessageFromL2 {
+pub struct MessageFromL2 {
     l2_contract_address: ContractAddressHex,
     l1_contract_addresss: ContractAddressHex,
     payload: Calldata,
 }
 
 #[derive(Serialize)]
-pub(crate) struct MessageHash {
+pub struct MessageHash {
     message_hash: FeltHex,
 }
 
 #[derive(Serialize)]
-pub(crate) struct CreatedBlock {
+pub struct CreatedBlock {
     block_hash: BlockHashHex,
 }
 
 #[derive(Deserialize)]
-pub(crate) struct AbortingBlocks {
+pub struct AbortingBlocks {
     #[serde(rename = "startingBlockHash")]
     starting_block_hash: BlockHashHex,
 }
 
 #[derive(Serialize)]
-pub(crate) struct AbortedBlocks {
+pub struct AbortedBlocks {
     aborted: Vec<BlockHashHex>,
 }
 
 #[derive(Deserialize)]
-pub(crate) struct Time {
+pub struct Time {
     time: u64,
 }
 
 #[derive(Serialize)]
-pub(crate) struct SerializableAccount {
-    pub(crate) initial_balance: String,
-    pub(crate) address: ContractAddressHex,
-    pub(crate) public_key: FeltHex,
-    pub(crate) private_key: FeltHex,
+pub struct SerializableAccount {
+    pub initial_balance: String,
+    pub address: ContractAddressHex,
+    pub public_key: FeltHex,
+    pub private_key: FeltHex,
 }
 
 #[derive(Deserialize)]
-pub(crate) struct ContractAddress {
+pub struct ContractAddress {
     contract_address: ContractAddressHex,
 }
 
 #[derive(Serialize)]
-pub(crate) struct Balance {
+pub struct Balance {
     amount: u128,
     unit: String,
 }
 
 #[derive(Serialize)]
-pub(crate) struct FeeToken {
+pub struct FeeToken {
     symbol: String,
     address: ContractAddressHex,
 }
 
 #[derive(Deserialize)]
-pub(crate) struct MintTokens {
+pub struct MintTokens {
     address: ContractAddressHex,
     amount: u128,
     lite: Option<bool>,
 }
 
 #[derive(Serialize)]
-pub(crate) struct MintTokensResponse {
+pub struct MintTokensResponse {
     new_balance: u128,
     unit: String,
     tx_hash: TransactionHashHex,
 }
 
 #[derive(Serialize)]
-pub(crate) struct ForkStatus {
+pub struct ForkStatus {
     url: String,
     block: u128,
 }

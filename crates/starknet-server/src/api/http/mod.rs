@@ -1,7 +1,5 @@
 pub(crate) mod endpoints;
 pub(crate) mod error;
-#[allow(unused)]
-mod models;
 
 use self::error::HttpApiError;
 use super::Api;

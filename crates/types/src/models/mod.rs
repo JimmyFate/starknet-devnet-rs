@@ -1,17 +1,21 @@
-pub(crate) mod abi_entry;
-pub(crate) mod block;
-pub(crate) mod contract_class;
-pub(crate) mod state;
-pub(crate) mod transaction;
+pub mod abi_entry;
+pub mod block;
+pub mod contract_class;
+#[allow(unused)]
+pub mod http_models;
+pub mod json_models;
+pub mod serde_helpers;
+pub mod state;
+pub mod transaction;
 
+use crate::contract_address::ContractAddress;
+use crate::felt::Felt;
+use crate::patricia_key::PatriciaKey;
 use serde::{Deserialize, Serialize};
+use starknet_api::block::BlockNumber;
 use starknet_rs_core::types::{BlockId as ImportedBlockId, BlockTag as ImportedBlockTag};
-use starknet_types::contract_address::ContractAddress;
-use starknet_types::felt::Felt;
-use starknet_types::patricia_key::PatriciaKey;
-use starknet_types::starknet_api::block::BlockNumber;
 
-use super::serde_helpers::hex_string::{
+use crate::models::serde_helpers::hex_string::{
     deserialize_prefixed_hex_string_to_felt, deserialize_to_prefixed_contract_address,
     deserialize_to_prefixed_patricia_key, serialize_contract_address_to_prefixed_hex,
     serialize_patricia_key_to_prefixed_hex, serialize_to_prefixed_hex,

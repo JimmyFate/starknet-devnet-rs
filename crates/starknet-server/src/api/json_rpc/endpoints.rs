@@ -2,16 +2,16 @@ use starknet_types::felt::Felt;
 use starknet_types::starknet_api::block::BlockNumber;
 
 use super::error::{self};
-use super::models::{BlockHashAndNumberOutput, EstimateFeeOutput, SyncingOutput};
 use super::{JsonRpcHandler, RpcResult};
-use crate::api::models::block::Block;
-use crate::api::models::contract_class::ContractClass;
-use crate::api::models::state::ThinStateDiff;
-use crate::api::models::transaction::{
+use starknet_types::models::block::Block;
+use starknet_types::models::contract_class::ContractClass;
+use starknet_types::models::models::{BlockHashAndNumberOutput, EstimateFeeOutput, SyncingOutput};
+use starknet_types::models::state::ThinStateDiff;
+use starknet_types::models::transaction::{
     BroadcastedTransactionWithType, ClassHashHex, EventFilter, EventsChunk, FunctionCall,
     Transaction, TransactionHashHex, TransactionReceipt, TransactionWithType,
 };
-use crate::api::models::{BlockId, ContractAddressHex, FeltHex, PatriciaKeyHex};
+use starknet_types::models::{BlockId, ContractAddressHex, FeltHex, PatriciaKeyHex};
 
 /// here are the definitions and stub implementations of all JSON-RPC read endpoints
 impl JsonRpcHandler {

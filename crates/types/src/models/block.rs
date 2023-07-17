@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use starknet_types::starknet_api::block::{BlockNumber, BlockStatus, BlockTimestamp};
+use starknet_api::block::{BlockNumber, BlockStatus, BlockTimestamp};
 
 use super::transaction::Transactions;
 use super::{ContractAddressHex, FeltHex};

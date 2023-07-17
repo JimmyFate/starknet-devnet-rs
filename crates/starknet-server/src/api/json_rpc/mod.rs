@@ -1,22 +1,21 @@
 mod endpoints;
 pub mod error;
-mod models;
 mod write_endpoints;
 
-use models::{
-    BlockAndClassHashInput, BlockAndContractAddressInput, BlockAndIndexInput, CallInput,
-    EstimateFeeInput, EventsInput, GetStorageInput, TransactionHashInput,
-};
 use serde::{Deserialize, Serialize};
 use server::rpc_core::error::RpcError;
 use server::rpc_core::response::ResponseResult;
 use server::rpc_handler::RpcHandler;
+use starknet_types::models::json_models::{
+    BlockAndClassHashInput, BlockAndContractAddressInput, BlockAndIndexInput, CallInput,
+    EstimateFeeInput, EventsInput, GetStorageInput, TransactionHashInput,
+};
 use tracing::{error, info, trace};
 
 use self::error::ApiError;
-use self::models::{BlockIdInput, BroadcastedDeclareTransactionInput};
 use super::Api;
-use crate::api::serde_helpers::empty_params;
+use starknet_types::models::json_models::{BlockIdInput, BroadcastedDeclareTransactionInput};
+use starknet_types::models::serde_helpers::empty_params;
 
 pub(crate) type RpcResult<T> = std::result::Result<T, ApiError>;
 
