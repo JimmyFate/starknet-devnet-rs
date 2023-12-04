@@ -29,19 +29,19 @@ jobs:
     resource_class: xlarge
     steps:
       - checkout
+      - run:
+          name: Install foundry
+          command: source ./scripts/install_foundry.sh
+      - run:
+          name: Try using anvil
+          command: anvil --version
       - restore_cache:
           keys:
             - << parameters.cargo_cache_key >>
       - run:
-          name: Install foundry
-          command: ./scripts/install_foundry.sh
-      - run:
-          name: Try using anvil
-          command: anvil --version
-      - run:
           # this step doesn't need to be cached, it's relatively fast (15s on Docker/X-Large)
           name: Install nightly
-          command: source rustup install nightly
+          command: rustup install nightly
       - run:
           name: Build
           command: cargo build --release
