@@ -4,7 +4,7 @@ set -eu
 
 echo "Installing foundryup"
 curl -L https://foundry.paradigm.xyz | bash || echo "As expected, received a non-zero exit code"
-export PATH="$PATH:/home/fabijanc/.foundry/bin"
+export PATH="$PATH:$HOME/.foundry/bin"
 
 # TODO if necessary, add the above PATH modification to BASH_ENV on circleci
 
