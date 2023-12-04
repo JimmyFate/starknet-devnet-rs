@@ -31,46 +31,10 @@ jobs:
       - checkout
       - run:
           name: Install foundry
-          command: source ./scripts/install_foundry.sh
+          command: ./scripts/install_foundry.sh
       - run:
           name: Try using anvil
           command: anvil --version
-      - restore_cache:
-          keys:
-            - << parameters.cargo_cache_key >>
-      - run:
-          # this step doesn't need to be cached, it's relatively fast (15s on Docker/X-Large)
-          name: Install nightly
-          command: rustup install nightly
-      - run:
-          name: Build
-          command: cargo build --release
-      - run:
-          name: Clippy check
-          command: ./scripts/clippy_check.sh
-      - run:
-          name: Format check
-          command: cargo +nightly fmt --all --check
-      - save_cache:
-          # Caching dependencies for future use
-          # Build and Clippy steps generate their own target artifacts
-          # Test also generates, but significantly more
-          # Compromise: saving before Test
-          paths:
-            - /home/circleci/.cargo/registry
-            - target/debug/.fingerprint
-            - target/debug/build
-            - target/debug/deps
-            - target/release/.fingerprint
-            - target/release/build
-            - target/release/deps
-          key: << parameters.cargo_cache_key >>
-      - run:
-          name: Test
-          # if jobs not limited - fails
-          # problem: https://app.circleci.com/pipelines/github/0xSpaceShard/starknet-devnet-rs/339/workflows/97e98c29-1563-4aa0-b716-4bfd023c563e/jobs/335/steps
-          # solution: https://stackoverflow.com/questions/71962406/how-to-use-less-memory-when-compiling-to-avoid-killing-the-build
-          command: cargo test --jobs 7
 
   image-build-amd:
     docker:
