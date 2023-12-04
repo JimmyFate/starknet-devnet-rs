@@ -41,7 +41,7 @@ jobs:
       - run:
           # this step doesn't need to be cached, it's relatively fast (15s on Docker/X-Large)
           name: Install nightly
-          command: rustup install nightly
+          command: source rustup install nightly
       - run:
           name: Build
           command: cargo build --release
