@@ -1,4 +1,6 @@
+use std::alloc::System;
 use std::fmt::{self};
+use std::time::{Instant, SystemTime, UNIX_EPOCH};
 
 use axum::extract::rejection::JsonRejection;
 use axum::extract::Extension;
@@ -8,7 +10,7 @@ use rpc_core::error::RpcError;
 use rpc_core::request::{Request, RpcCall, RpcMethodCall};
 use rpc_core::response::{Response, ResponseResult, RpcResponse};
 use serde::de::DeserializeOwned;
-use tracing::{error, trace, warn};
+use tracing::{error, info, trace, warn};
 
 /// Helper trait that is used to execute starknet rpc calls
 #[async_trait::async_trait]
@@ -28,6 +30,7 @@ pub trait RpcHandler: Clone + Send + Sync + 'static {
     /// **Note**: override this function if the expected `Request` deviates from `{ "method" :
     /// "<name>", "params": "<params>" }`
     async fn on_call(&self, call: RpcMethodCall) -> RpcResponse {
+        let start = Instant::now();
         trace!(target: "rpc",  id = ?call.id , method = ?call.method, "received method call");
         let RpcMethodCall { method, params, id, .. } = call;
 
@@ -37,10 +40,23 @@ pub trait RpcHandler: Clone + Send + Sync + 'static {
             "params": params
         });
 
+        if !method.contains("add") {
+            let request_str = serde_json::to_string(&call).unwrap();
+            let f_name = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_millis();
+            std::fs::write(format!("{}_{}.json", f_name, method.as_str()), request_str).unwrap();
+        }
+
         match serde_json::from_value::<Self::Request>(call) {
             Ok(req) => {
                 let result = self.on_request(req).await;
-                RpcResponse::new(id, result)
+                let elapsed = start.elapsed().as_millis();
+                let response = RpcResponse::new(id, result);
+                if elapsed > 1000 {
+                    warn!("Response to method {} sent in {} ", method, elapsed);
+                } else if elapsed > 0 {
+                    info!("Response to method {} sent in {} ", method, elapsed);
+                }
+                response
             }
             Err(err) => {
                 let err = err.to_string();

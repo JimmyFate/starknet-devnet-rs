@@ -67,10 +67,79 @@ impl JsonRpcHandler {
 
 #[cfg(test)]
 mod tests {
+    use std::env;
+
+    use starknet_core::starknet::starknet_config::StarknetConfig;
+    use starknet_core::starknet::Starknet;
+    use starknet_types::felt::Felt;
 
     use crate::api::json_rpc::models::{
-        BroadcastedDeclareTransactionEnumWrapper, BroadcastedDeployAccountTransactionEnumWrapper,
+        BroadcastedDeclareTransactionEnumWrapper, BroadcastedDeclareTransactionInput,
+        BroadcastedDeployAccountTransactionEnumWrapper, BroadcastedInvokeTransactionEnumWrapper,
+        BroadcastedInvokeTransactionInput,
     };
+    use crate::api::json_rpc::StarknetRequest;
+
+    #[test]
+    fn perfromance() {
+        let seed: u32 = 3819977873;
+        let config = StarknetConfig { seed, ..Default::default() };
+        let mut starknet = Starknet::new(&config).unwrap();
+        let files = [
+            "1703494795905_starknet_addDeclareTransaction.json",
+            "1703494799624_starknet_addInvokeTransaction.json",
+            "1703494802273_starknet_addDeclareTransaction.json",
+            "1703494804953_starknet_addInvokeTransaction.json",
+            "1703494809746_starknet_addDeclareTransaction.json",
+        ];
+
+        for file in files {
+            let path = format!("../../{}", file);
+            let req =
+                serde_json::from_str::<StarknetRequest>(&std::fs::read_to_string(&path).unwrap())
+                    .unwrap();
+
+            match req {
+                StarknetRequest::AddDeclareTransaction(BroadcastedDeclareTransactionInput {
+                    declare_transaction,
+                }) => {
+                    let BroadcastedDeclareTransactionEnumWrapper::Declare(txn) =
+                        declare_transaction;
+                    match txn {
+                        starknet_types::rpc::transactions::BroadcastedDeclareTransaction::V1(
+                            v1,
+                        ) => {
+                            let (txn_hash, _) = starknet.add_declare_transaction_v1(*v1).unwrap();
+                        }
+                        starknet_types::rpc::transactions::BroadcastedDeclareTransaction::V2(_) => {
+                            todo!()
+                        }
+                    }
+                }
+                StarknetRequest::AddInvokeTransaction(BroadcastedInvokeTransactionInput {
+                    invoke_transaction,
+                }) => {
+                    let BroadcastedInvokeTransactionEnumWrapper::Invoke(txn) = invoke_transaction;
+                    starknet.add_invoke_transaction(txn).unwrap();
+                }
+                _ => panic!("aa"),
+            }
+        }
+
+        let class_hash = Felt::from_prefixed_hex_str(
+            "0x36c7e49a16f8fc760a6fbdf71dde543d98be1fee2eda5daff59a0eeae066ed9",
+        )
+        .unwrap();
+
+        let class = starknet
+            .get_class(
+                starknet_rs_core::types::BlockId::Tag(starknet_rs_core::types::BlockTag::Pending),
+                class_hash,
+            )
+            .unwrap();
+
+        println!("{}", serde_json::to_string(&class).unwrap().len());
+    }
 
     #[test]
     fn check_correct_deserialization_of_deploy_account_transaction_request() {
